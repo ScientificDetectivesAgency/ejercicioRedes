@@ -2,13 +2,13 @@
 
 Para resolver el exámen deber restaurar el backup que contiene las siguientes tablas:
 
-| Tabla |Descripción | Id del Museo |
-|     :---:    |     :---:      |     :---:     |
-| Inicio | Museo Casa Lenin Trotsky | 966 |
-| 00 | Museo Histórico Judío y del Holocausto Tuvie Maizel | 847 |
-| 00 | Planetario Joaquín Gallo | 1776 |
-| 00 | Museo de la tortura | 1806 |
-| 00 | Museo del Pulque y las pulquerías | 2110 |
+| Tabla |Descripción |
+|     :---:    |     :---:      |
+| osm_cdmx | Red de la Ciudad de México (Open Street Maps) |
+| denue_cdmx | Directorio Estadístico Nacional de Unidades Económicas (INEGI, 2016) |
+| ecobicis | Puntos de las estaciones de EcoBici |
+| museos | Puntos de los museos en la Ciudad de México |
+
 
 **Sección 1:** Preparación de los datos
   1. Recortar la red de la cdmx y el DENUE con el poligono de las alcaldías: Benito Juárez, Alvaro Obregón, Miguel Hidalgo y Cuauhtémoc (1 Punto). 
