@@ -59,7 +59,7 @@ from as20min_#id_museo#'),32614)as geom;
 
 **Sección 3:** 
 
-1. Ahora para comprar la diferencia entre áreas de servicio y un buffer, calcula el buffer a 20min cominando con el índice como costo de cada uno de los museos de la lista anterior y realizala intersección anterior, guardalas como **buf20min_denue**, **buf20min_ecobici**
+1. Ahora para comprar la diferencia entre áreas de servicio y un buffer, calcula el buffer a 20min cominando con el índice como costo de cada uno de los museos de la lista anterior y realizala intersección anterior, guardalas como **buf20min_denue**, **buf20min_ecobici** (4 puntos)
 
 **Pista:** Despeja de la formula de velocidad usando la longitud y la velocidad promedio caminando
 
