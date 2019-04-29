@@ -46,7 +46,7 @@ Para resolver el exámen debes restaurar el backup que contiene las siguientes t
 
   1. Repite lo anterior pero con la columna tiempo como costo y guarda la tabla con la geometría de la ruta con el nombre **tsp_tiempo** (3 puntos)
 
-  1. Calcula las áreas de servicio a 20 minutos de cada uno de los museos de las lista anterior, usa el _indice_ como costo y guarda las tablas con el nombre **as20min_#id_museo#**. Con la siguiente función calcula el poligono que lo delimita (3 Puntos): 
+  1. Calcula las áreas de servicio a 20 minutos de cada uno de los museos de las lista anterior, usa el _indice_ como costo, haz el join con la geometría de los puntos y guarda las tablas con el nombre **as20min_#id_museo#**. Con la siguiente función calcula el poligono que lo delimita (3 Puntos): 
 
 ```sql
 create table area20min_#id_museo# as 
