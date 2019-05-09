@@ -27,14 +27,33 @@ Para resolver el exámen debes restaurar el backup que contiene las siguientes t
 **Pista** Para ello necesitas hacer un _case_
 **Nota:** En la tabla osm_recorte columna  _type_id_ representa los id de ls tipos de camino, en la tabla de abajo puedes encontrar lo que significa cada uno.
 
-| type_id | name |
-|     :---:    |     :---:      |
-| 2	| cycleway | 
-| 1	| highway |
-| 4	| junction |
-| 3	| tracktype |
 
-  1. Como ejemplo de las rutas del programa utiliza la columna _indice_ como costo y calcula la función pgr_TSP (Problema del Agente Viajero) para encontrar el orden en el que se deben recorrer puntos y trazar la ruta, guarda la tabla con la geometría de la ruta con el nombre **tsp_indice** (3 puntos):
+
+|class_id | type_id | name | priority | default_maxspeed|
+|  :---:  | :---:   | :---: |     :---:      |    :---:    |   
+|201 |       2 | lane              |        1 |               50|
+|204 |       2 | opposite          |        1 |               50|
+|203 |       2 | opposite_lane     |        1 |               50|
+|202 |       2 | track             |        1 |               50|
+|120 |       1 | bridleway         |        1 |               50|
+|116 |       1 | bus_guideway      |        1 |               50|
+|121 |       1 | byway             |        1 |               50|
+|118 |       1 | cycleway          |        1 |               50|
+|119 |       1 | footway           |        1 |               50|
+|111 |       1 | living_street     |        1 |               50|
+|101 |       1 | motorway          |        1 |               50|
+|103 |       1 | motorway_junction |        1 |               50|
+|102 |       1 | motorway_link     |        1 |               50|
+|117 |       1 | path              |        1 |               50|
+|114 |       1 | pedestrian        |        1 |               50|
+|106 |       1 | primary           |        1 |               50|
+|107 |       1 | primary_link      |        1 |               50|
+|110 |       1 | residential       |        1 |               50|
+|100 |       1 | road              |        1 |               50|
+|108 |       1 | secondary         |        1 |               50|
+|124 |       1 | secondary_link    |        1 |               50|
+
+1. Como ejemplo de las rutas del programa utiliza la columna _indice_ como costo y calcula la función pgr_TSP (Problema del Agente Viajero) para encontrar el orden en el que se deben recorrer puntos y trazar la ruta, guarda la tabla con la geometría de la ruta con el nombre **tsp_indice** (3 puntos):
 
 | Orden del nodo | Nombre del Museo | Id del Museo |
 |     :---:    |     :---:      |     :---:     |
