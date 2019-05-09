@@ -1,12 +1,12 @@
-**NOTA** El examen consta de 3 secciones, las primeras dos secciones las tienen que resolver todos,la sección tres es para quienes reprobaron el primer exámen y puntos extras para los que si lo pasaron. 
 
-Para resolver el exámen debes restaurar el backup que contiene las siguientes tablas:
+
+Para resolver el ejercicio debes restaurar el backup que contiene las siguientes tablas:
 
 | Tabla |Descripción |
 |     :---:    |     :---:      |
 | osm_cdmx | Red de la Ciudad de México (Open Street Maps, 2016) |
 | denue_cdmx | Directorio Estadístico Nacional de Unidades Económicas (INEGI, 2016) |
-| alcandias | Alcandías de las Ciudad de México |
+| alcaldias | Alcaldías de las Ciudad de México |
 | ecobici | Puntos de las estaciones de EcoBici |
 | museos | Puntos de los museos en la Ciudad de México |
 
@@ -25,7 +25,7 @@ Para resolver el exámen debes restaurar el backup que contiene las siguientes t
   1. Agrega una columna que se llame _indice_ y calcula el tiempo en función del tipo de camino, dando prioridad al cycleway
 (1 punto). 
 **Pista** Para ello necesitas hacer un _case_
-**Nota:** En la tabla osm_recorte columna  _type_id_ representa los id de ls tipos de camino, en la tabla de abajo puedes encontrar lo que significa cada uno.
+**Nota:** En la tabla osm_recorte columna  _class_id_ representa los id de ls tipos de camino, en la tabla de abajo puedes encontrar lo que significa cada uno.
 
 
 
