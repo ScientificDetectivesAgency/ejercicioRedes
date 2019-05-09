@@ -18,6 +18,8 @@ Para resolver el ejercicio debes restaurar el backup que contiene las siguientes
   1. Agregar una columan que se llame _closest_node_ a las tablas **denue_recorte**, **museos** y **ecobici**, y realiza un update con el id del nodo más cercano de los vertices de la red (1 Puntos).
   1. Calcula la _longitud_ y el _tiempo_ de recorrido y agregalos como columnas a la red (1 punto)
 
+https://github.com/eurekastein/ejercicio/blob/master/consultas_utiles.sql
+
 **NOTA:** No olvides verificar las proyecciones de las capas
 
 **Sección 2:** El gobierno de la Ciudad de México está planeando crear un programa de impulso a las actividades culturales a través del servicio de ecoBici; por lo que necesita elaborar rutas entre diferentes museos y saber cuáles son las estaciones de ecobici que se encuentran a menos de 20 minutos. Además de identificar el tipo de comercios que se pueden entrontrar al rededor de los museos.
@@ -54,6 +56,8 @@ Para resolver el ejercicio debes restaurar el backup que contiene las siguientes
 |124 |       1 | secondary_link    |        1 |               50|
 
 1. Como ejemplo de las rutas del programa utiliza la columna _indice_ como costo y calcula la función pgr_TSP (Problema del Agente Viajero) para encontrar el orden en el que se deben recorrer puntos y trazar la ruta, guarda la tabla con la geometría de la ruta con el nombre **tsp_indice** (3 puntos):
+
+https://github.com/eurekastein/agente
 
 | Orden del nodo | Nombre del Museo | Id del Museo |
 |     :---:    |     :---:      |     :---:     |
