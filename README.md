@@ -1,4 +1,6 @@
 
+##Problema##
+El gobierno de la Ciudad de México está planeando crear un programa de impulso a las actividades culturales a través del servicio de ecoBici; por lo que necesita elaborar rutas entre diferentes museos y saber cuáles son las estaciones de ecobici que se encuentran a menos de 20 minutos. Además de identificar el tipo de comercios que se pueden entrontrar al rededor de los museos, impulsar la economía de los comerciantes en esa zona.
 
 Para resolver el ejercicio debes restaurar el backup que contiene las siguientes tablas:
 
@@ -10,26 +12,49 @@ Para resolver el ejercicio debes restaurar el backup que contiene las siguientes
 | ecobici | Puntos de las estaciones de EcoBici |
 | museos | Puntos de los museos en la Ciudad de México |
 
+###Parte I: Preparación de los datos### 
 
-**Sección 1:** Preparación de los datos:
+Dado que los museos con los que vamos a trabajar están en las delegaciones: Benito Juárez, Alvaro Obregón, Miguel Hidalgo y Cuauhtémoc. Será necesario hacer un recorte de las tablas **osm_cdmx** y **osm_cdmx** con el polígono de alcaldías. 
 
-  1. Recortar la tabla **osm_cdmx** y el **denue_cdmx** con el poligono de las alcaldías: Benito Juárez, Alvaro Obregón, Miguel Hidalgo y Cuauhtémoc, y creas las tablas **osm_recorte** y **denue_recorte** (1 Punto). 
-  1. Calcular la topología de la red (1 Punto).
-  1. Agregar una columan que se llame _closest_node_ a las tablas **denue_recorte**, **museos** y **ecobici**, y realiza un update con el id del nodo más cercano de los vertices de la red (1 Puntos).
-  1. Calcula la _longitud_ y el _tiempo_ de recorrido y agregalos como columnas a la red (1 punto)
+```sql
+select  a.cvegeo, b.*
+into osm_recorte
+from alcaldias a
+join osm_cdmx b
+on st_intersects(a.geom, b.geom)
+where a.cve_mun IN ('014','010', '016', '015');
+```
+__NOTA:__ El Qry anterior corta la red, ahora haz lo mismo para el DENUE
 
-https://github.com/eurekastein/ejercicio/blob/master/consultas_utiles.sql
+Ya que tenemos la red con la que vamos a trabajar, será necesario calcular la topología de la misma 
 
-**NOTA:** No olvides verificar las proyecciones de las capas
+```sql
+alter table osm_recorte add column source integer;
+alter table  osm_recorte add column target integer;
 
-**Sección 2:** El gobierno de la Ciudad de México está planeando crear un programa de impulso a las actividades culturales a través del servicio de ecoBici; por lo que necesita elaborar rutas entre diferentes museos y saber cuáles son las estaciones de ecobici que se encuentran a menos de 20 minutos. Además de identificar el tipo de comercios que se pueden entrontrar al rededor de los museos.
+select pgr_createTopology ('osm_recorte', 0.005, 'geom', 'id'); 
+```
+Ahora como los algoritmos que trabajan con redes no reconocen puntos que no estén asociados a los nodos de la red, vamos a agregar a las tablas **denue_recorte**, **museos** y **ecobici** una coloumna que se llame `closest_node` (este campo debe ser de tipo `bigint`) y le asignaremos el id del nodo más cercano de la tabla de vertices. 
 
-  1. Agrega una columna que se llame _indice_ y calcula el tiempo en función del tipo de camino, dando prioridad al cycleway
-(1 punto). 
-**Pista** Para ello necesitas hacer un _case_
-**Nota:** En la tabla osm_recorte columna  _class_id_ representa los id de ls tipos de camino, en la tabla de abajo puedes encontrar lo que significa cada uno.
+```sql
+alter table ecobici add column closest_node bigint;
+
+update ecobici set closest_node = c.closest_node
+from  
+(select b.id as id_ecobici, (
+SELECT a.id
+FROM osm_recorte_vertices_pgr As a
+ORDER BY b.geom <-> a.the_geom LIMIT 1
+)as closest_node
+from  ecobici b) as c
+where c.id_ecobici = ecobici.id;
+```
+**NOTA1:** Repite la operación anterior para las todas las tablas de puntos 
+**NOTA2:** No olvides verificar las proyecciones de las capas
 
 
+###Parte I: Costos ### 
+Hasta este punto ya hemos preparado los datos para comenzar a trabajar. Sin embargo, es necesario determinar cuales son los valores de costo con los que se va a realizar en análisis, el costo en análisis de redes de transporte implica la dificultad de circular por un camino (arco) comparado con otro y podemos definirlo como fricción. En este caso es necesario hacer que las rutas vayan por calles seguras para circular en bicicleta, en la tabla de abajo podemos identificar la clasificación de Open Street Maps del tipo de vialidad, además de la velocidad máxima. 
 
 |class_id | type_id | name | priority | default_maxspeed|
 |  :---:  | :---:   | :---: |     :---:      |    :---:    |   
@@ -55,6 +80,40 @@ https://github.com/eurekastein/ejercicio/blob/master/consultas_utiles.sql
 |108 |       1 | secondary         |        1 |               50|
 |124 |       1 | secondary_link    |        1 |               50|
 
+Para determinar los costos agregaremos tres columnas: `longitud`, `tiempo` e `indice` y calculamos cada una de ellas. Primero calculamos la `longitud` con la función `st_length`: 
+
+```sql
+update osm_recorte set longitud = st_length(geom)
+```
+Teniendo la longituda y la velocidad, ahora despejamos el tiempo y lo convertimos a minutos: 
+
+```sql
+update osm_recorte
+set tiempo_min = longitud::float/((maxspeed::float)*16.6667) 
+```
+Ahora para poder considerar el tipo de camino y escalar la velocidad, longitud o tiempo en función de este atributo, vamos a hacer un índice, donde seleccionemos los caminos transitables con mayor facilidad por una bicicleta y vamos a estirar los valores de longitud para todas las demás categorias. Esto es porque si el valor del indice es mayor, entonces el algoritmo no tomará como primera opción ese camino. En tabla de abajo observarás los tipos de vialidad por donde es mejor circular en bicicleta.  
+
+|class_id | type_id | name | priority | default_maxspeed|
+|  :---:  | :---:   | :---: |     :---:      |    :---:    |   
+|201 |       2 | lane              |        1 |               50|
+|204 |       2 | opposite          |        1 |               50|
+|203 |       2 | opposite_lane     |        1 |               50|
+|202 |       2 | track             |        1 |               50|
+|118 |       1 | cycleway          |        1 |               50|
+
+
+```sql
+update osm_recorte set indice =
+  case
+    when class_id = '201' then longitud*0.5
+    when class_id = '204' then longitud*2
+    when class_id = '203' then longitud*2
+    when class_id = '202' then longitud*2
+    else longitud * 10
+  end;
+```
+
+###Parte I: Agente Viajero### 
 1. Como ejemplo de las rutas del programa utiliza la columna _indice_ como costo y calcula la función pgr_TSP (Problema del Agente Viajero) para encontrar el orden en el que se deben recorrer puntos y trazar la ruta, guarda la tabla con la geometría de la ruta con el nombre **tsp_indice** (3 puntos):
 
 https://github.com/eurekastein/agente
