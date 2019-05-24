@@ -1,5 +1,5 @@
 
-##Problema##
+## Problema ##
 El gobierno de la Ciudad de México está planeando crear un programa de impulso a las actividades culturales a través del servicio de ecoBici; por lo que necesita elaborar rutas entre diferentes museos y saber cuáles son las estaciones de ecobici que se encuentran a menos de 20 minutos. Además de identificar el tipo de comercios que se pueden entrontrar al rededor de los museos, impulsar la economía de los comerciantes en esa zona.
 
 Para resolver el ejercicio debes restaurar el backup que contiene las siguientes tablas:
@@ -12,7 +12,7 @@ Para resolver el ejercicio debes restaurar el backup que contiene las siguientes
 | ecobici | Puntos de las estaciones de EcoBici |
 | museos | Puntos de los museos en la Ciudad de México |
 
-###Parte I: Preparación de los datos### 
+### Parte I: Preparación de los datos ### 
 
 Dado que los museos con los que vamos a trabajar están en las delegaciones: Benito Juárez, Alvaro Obregón, Miguel Hidalgo y Cuauhtémoc. Será necesario hacer un recorte de las tablas **osm_cdmx** y **osm_cdmx** con el polígono de alcaldías. 
 
@@ -53,7 +53,7 @@ where c.id_ecobici = ecobici.id;
 **NOTA2:** No olvides verificar las proyecciones de las capas
 
 
-###Parte I: Costos ### 
+### Parte II: Costos ### 
 Hasta este punto ya hemos preparado los datos para comenzar a trabajar. Sin embargo, es necesario determinar cuales son los valores de costo con los que se va a realizar en análisis, el costo en análisis de redes de transporte implica la dificultad de circular por un camino (arco) comparado con otro y podemos definirlo como fricción. En este caso es necesario hacer que las rutas vayan por calles seguras para circular en bicicleta, en la tabla de abajo podemos identificar la clasificación de Open Street Maps del tipo de vialidad, además de la velocidad máxima. 
 
 |class_id | type_id | name | priority | default_maxspeed|
@@ -113,7 +113,7 @@ update osm_recorte set indice =
   end;
 ```
 
-###Parte I: Agente Viajero### 
+### Parte III: Agente Viajero ### 
 1. Como ejemplo de las rutas del programa utiliza la columna _indice_ como costo y calcula la función pgr_TSP (Problema del Agente Viajero) para encontrar el orden en el que se deben recorrer puntos y trazar la ruta, guarda la tabla con la geometría de la ruta con el nombre **tsp_indice** (3 puntos):
 
 https://github.com/eurekastein/agente
